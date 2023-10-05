@@ -1,0 +1,16 @@
+{
+  "sessions": [
+    {
+      "id": "827663400:827663400",
+      "data": {
+        "courseLike": true,
+        "__scenes": {
+          "current": "rate_usdt",
+          "state": {},
+          "expires": 1696508014,
+          "awaitingSumInput": false
+        }
+      }
+    }
+  ]
+}

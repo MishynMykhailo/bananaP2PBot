@@ -1,12 +1,10 @@
-import { Telegraf, Markup } from "telegraf";
-import { IBotContext } from "../context/context.interface";
-import { Command } from "./command.class";
+const { Markup } = require("telegraf");
 
-export class StartCommand extends Command {
-  constructor(bot: Telegraf<IBotContext>) {
-    super(bot);
+class StartCommand {
+  constructor(bot) {
+    this.bot = bot;
   }
-  handle(): void {
+  handle() {
     this.bot.start((ctx) => {
       console.log(ctx.session, ctx.message);
       ctx.reply(
@@ -21,10 +19,11 @@ export class StartCommand extends Command {
       ctx.session.courseLike = true;
       ctx.editMessageText("Круто");
     });
-      this.bot.action("course_dislike", (ctx) => {
-        ctx.session.courseLike = true;
-          ctx.editMessageText("Плохо
-        ");
-      });
+    this.bot.action("course_dislike", (ctx) => {
+      ctx.session.courseLike = false;
+      ctx.editMessageText("Плохо");
+    });
   }
 }
+
+module.exports = StartCommand;
