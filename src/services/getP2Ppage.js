@@ -4,8 +4,8 @@ require("dotenv").config();
 const { BINANCE_URL } = process.env;
 
 async function getP2Ppage(data) {
-  const { method, bank } = data;
-  console.log(method, bank);
+  const { method, bank, transAmount } = data;
+  console.log(typeof transAmount);
   try {
     const url = BINANCE_URL; // Перенес url сюда
     const headers = {
@@ -14,17 +14,17 @@ async function getP2Ppage(data) {
 
     const jsonData = {
       page: 1,
-      rows: 1,
+      rows: 5,
       asset: "USDT", // Используйте переданный параметр asset или "USDT" по умолчанию
       fiat: "UAH", // Используйте переданный параметр fiat или "UAH" по умолчанию
       tradeType: method, // Используйте переданный параметр tradeType или "Sell" по умолчанию
       payTypes: [bank], // Используйте переданный параметр payTypes или ["PrivatBank"] по умолчанию
-      transAmount: 1000, // Используйте переданный параметр transAmount или 1000 по умолчанию
+      transAmount: transAmount, // Используйте переданный параметр transAmount или 1000 по умолчанию
     };
 
     try {
       const response = await axios.post(url, jsonData, { headers });
-      console.log(response.data.data);
+
       return response.data.data.map(({ adv, advertiser }) => {
         const {
           tradeType,

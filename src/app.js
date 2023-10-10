@@ -1,38 +1,31 @@
-const { Telegraf, Scenes, session } = require("telegraf");
-const StartCommand = require("./commands/start.command");
+const { Telegraf, Scenes } = require("telegraf");
 const LocalSession = require("telegraf-session-local");
+const StartCommand = require("./commands/start.command");
 const MenuCommand = require("./commands/menu.command");
 const rateUsdtScene = require("./scenes/rate_usdt.scene");
-
 require("dotenv").config();
-
 const { TOKEN } = process.env;
-
 class Bot {
-  bot;
-  commands = [];
-  scenes = [];
-
   constructor(token) {
     this.bot = new Telegraf(token);
-    this.bot.use(new LocalSession({ database: "session.json" })).middleware();
+    this.commands = [new StartCommand(this.bot), new MenuCommand(this.bot)];
+    this.scenes = [rateUsdtScene];
+
+    this.initMiddleware();
+    this.initCommands();
+    this.bot.launch();
+    console.log("Бот запущен");
   }
 
-  init() {
-    this.commands.push(new StartCommand(this.bot));
-    this.commands.push(new MenuCommand(this.bot));
-    this.scenes.push(rateUsdtScene);
-
-    // Создайте объект stage после добавления сцен:
+  initMiddleware() {
+    this.bot.use(new LocalSession({ database: "session.json" }).middleware());
     const stage = new Scenes.Stage(this.scenes);
     this.bot.use(stage.middleware());
+  }
 
-    for (const command of this.commands) {
-      command.handle();
-    }
-    this.bot.launch();
+  initCommands() {
+    this.commands.forEach((command) => command.register());
   }
 }
 
 const bot = new Bot(TOKEN);
-bot.init();

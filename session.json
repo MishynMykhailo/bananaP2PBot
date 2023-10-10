@@ -5,10 +5,14 @@
       "data": {
         "courseLike": true,
         "__scenes": {
+          "fetchData": {
+            "method": "buy",
+            "bank": "privatBank"
+          },
           "current": "rate_usdt",
           "state": {},
-          "expires": 1696508014,
-          "awaitingSumInput": false
+          "expires": 1696925247,
+          "awaitingSumInput": true
         }
       }
     }
