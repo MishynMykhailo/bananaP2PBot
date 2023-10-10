@@ -4,25 +4,31 @@ class StartCommand {
   constructor(bot) {
     this.bot = bot;
   }
-  handle() {
-    this.bot.start((ctx) => {
-      console.log(ctx.session, ctx.message);
-      ctx.reply(
-        "Вам понравился курс?",
-        Markup.inlineKeyboard([
-          Markup.button.callback("Like", "course_like"),
-          Markup.button.callback("dislike", "course_dislike"),
-        ])
-      );
-    });
-    this.bot.action("course_like", (ctx) => {
-      ctx.session.courseLike = true;
-      ctx.editMessageText("Круто");
-    });
-    this.bot.action("course_dislike", (ctx) => {
-      ctx.session.courseLike = false;
-      ctx.editMessageText("Плохо");
-    });
+
+  register() {
+    this.bot.start(this.onStart.bind(this));
+    this.bot.action("course_like", this.onLike.bind(this));
+    this.bot.action("course_dislike", this.onDislike.bind(this));
+  }
+
+  async onStart(ctx) {
+    await ctx.reply(
+      "Вам понравился курс?",
+      Markup.inlineKeyboard([
+        Markup.button.callback("Like", "course_like"),
+        Markup.button.callback("Dislike", "course_dislike"),
+      ])
+    );
+  }
+
+  async onLike(ctx) {
+    ctx.session.courseLike = true;
+    await ctx.editMessageText("Круто");
+  }
+
+  async onDislike(ctx) {
+    ctx.session.courseLike = false;
+    await ctx.editMessageText("Плохо");
   }
 }
 

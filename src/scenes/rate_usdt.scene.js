@@ -1,46 +1,109 @@
 const { Scenes, Markup } = require("telegraf");
+const getP2Ppage = require("../services/getP2Ppage");
+const getCurrentFormattedDate = require("../helpers/getCurrentFormattedDate");
+const {
+  markupListOrders,
+  markupInfoOperation,
+} = require("../helpers/markupMessage");
 const { BaseScene } = Scenes;
 
-const BuyUsdtScene = new BaseScene("rate_usdt", { ttl: 60 });
+class RateUsdtScene extends BaseScene {
+  constructor() {
+    super("rate_usdt", { ttl: 25 });
+    this.enter(this.askBank.bind(this));
+    this.action("privatBank", this.handlePrivateBank.bind(this));
+    this.action("monobank", this.handleMonoBank.bind(this));
+    this.hears(/.+/, this.captureInput.bind(this));
+  }
 
-BuyUsdtScene.enter((ctx) => {
-  ctx.reply(
-    "Какой банк вас интересует ?",
-    Markup.inlineKeyboard([
-      Markup.button.callback("ПриватБанк", "privateBank"),
-      Markup.button.callback("МоноБанк", "monobank"),
-    ])
-  );
-});
+  async askBank(ctx) {
+    await ctx.reply(
+      "Какой банк вас интересует?",
+      Markup.inlineKeyboard([
+        Markup.button.callback("ПриватБанк", "privatBank"),
+        Markup.button.callback("МоноБанк", "monobank"),
+      ])
+    );
+  }
 
-BuyUsdtScene.action("privateBank", (ctx) => {
-  console.log(ctx.match.input) // Вывести консоль лог какой банк выбран
-  ctx.editMessageText("privateBank. Пожалуйста, введите сумму:");
-  ctx.scene.session.awaitingSumInput = true;
-});
-BuyUsdtScene.on("text", (ctx) => {
-  if (ctx.scene.session.awaitingSumInput) {
-    // Если мы ожидаем сумму, обрабатываем этот ввод
-    const sum = ctx.message.text;
-    ctx.reply(`Вы ввели сумму: ${sum}`); // Здесь вы можете добавить дополнительную логику обработки
+  async handlePrivateBank(ctx) {
+    ctx.editMessageText(
+      "privatBank. Сколько хотите обменять гривны? Введите число:"
+    );
+    ctx.scene.session.awaitingSumInput = true;
+    ctx.scene.session.fetchData.bank = ctx.match.input;
+  }
 
-    ctx.scene.session.awaitingSumInput = false; // Сбрасываем состояние, так как сумма уже введена
+  async handleMonoBank(ctx) {
+    await ctx.reply("Вы выбрали Monobank.");
     return ctx.scene.leave();
   }
-  // Если не ожидаем ввода суммы, то просто проигнорируем это сообщение или обработаем иначе
-});
-BuyUsdtScene.action("monobank", (ctx) => {
-  ctx.reply("You chose Monobank.");
-  return ctx.scene.leave(); // exit global namespace
-});
 
-BuyUsdtScene.leave((ctx) => {
-  if (ctx.scene.session.awaitingSumInput) {
-    ctx.reply("Извините, вы долго думали.");
-  } else {
-    ctx.reply("Thank you for your time!");
+  async captureInput(ctx) {
+    const { awaitingSumInput } = ctx.scene.session;
+    if (awaitingSumInput) {
+      const sum = Number(ctx.message.text);
+
+      await ctx.reply(`Вы ввели сумму: ${sum}`);
+
+      awaitingSumInput = false;
+
+      ctx.scene.session.fetchData.transAmount = sum;
+
+      const { transAmount, method, bank } = ctx.scene.session.fetchData;
+
+      const message = markupInfoOperation({ transAmount, method, bank });
+
+      await ctx.reply(message, { parse_mode: "Markdown" });
+      const result = await getP2Ppage(ctx.scene.session.fetchData);
+      const resultMessage = result.map((e, index) =>
+        markupListOrders(e, index)
+      );
+
+      const finalMessage = [
+        `*Запрос сделан:* ${getCurrentFormattedDate()} `,
+        `-------------------------------------------------------------`,
+        ...resultMessage,
+      ];
+
+      await ctx.reply(finalMessage.join("\n"), {
+        parse_mode: "Markdown",
+      });
+    }
   }
-  delete ctx.scene.session.awaitingSumInput; // очистка состояния
-});
+  async captureInput(ctx) {
+    const { awaitingSumInput } = ctx.scene.session;
 
-module.exports = BuyUsdtScene;
+    if (!awaitingSumInput) {
+      return;
+    }
+    const { text: userArmount } = ctx.message;
+    console.log(userArmount, typeof userArmount);
+
+    await ctx.reply(`Вы ввели сумму: ${sum}`);
+
+    awaitingSumInput = false;
+
+    ctx.scene.session.fetchData.transAmount = sum;
+
+    const { transAmount, method, bank } = ctx.scene.session.fetchData;
+
+    const message = markupInfoOperation({ transAmount, method, bank });
+
+    await ctx.reply(message, { parse_mode: "Markdown" });
+    const result = await getP2Ppage(ctx.scene.session.fetchData);
+    const resultMessage = result.map((e, index) => markupListOrders(e, index));
+
+    const finalMessage = [
+      `*Запрос сделан:* ${getCurrentFormattedDate()} `,
+      `-------------------------------------------------------------`,
+      ...resultMessage,
+    ];
+
+    await ctx.reply(finalMessage.join("\n"), {
+      parse_mode: "Markdown",
+    });
+  }
+}
+
+module.exports = new RateUsdtScene();
