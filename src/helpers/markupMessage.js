@@ -27,20 +27,35 @@ function markupListOrders(data, index) {
     bank,
   } = data;
 
+  //      return [
+  //     `|👤 *Имя:* ${nickName} `,
+  //     `|`,
+  //     `|🤔 *Операц.за месяц/рейтинг:* ${monthOrderCount}/${monthFinishRate}`,
+  //     `|`,
+  //     `|💰 *Осталось ${asset}:* ${surplusAmount}`,
+  //     `|`,
+  //     `|📊 Торгует от ${minSingleTransAmount} ${fiatSymbol} до ${dynamicMaxSingleTransAmount} ${fiatSymbol}`,
+  //     `|`,
+  //     `|🧐 *Продает* 1 ${asset} за ${price} ${fiatSymbol}`,
+  //     `|`,
+  //     `|🏛 *Банк:* ${bank}`,
+  //     `--------------------------------------`,
+  //   ]
   return [
-    `| *№ ${index + 1} *`,
-    `|`,
-    `|👤 *Имя:* ${nickName} `,
-    `|`,
-    `|🤔 *Операц.за месяц/рейтинг:* ${monthOrderCount}/${monthFinishRate}`,
-    `|`,
-    `|💰 *Осталось ${asset}:* ${surplusAmount}`,
-    `|`,
-    `|📊 Торгует от ${minSingleTransAmount} ${fiatSymbol} до ${dynamicMaxSingleTransAmount} ${fiatSymbol}`,
-    `|`,
-    `|🧐 *Продает* 1 ${asset} за ${price} ${fiatSymbol}`,
-    `|`,
-    `|🏛 *Банк:* ${bank} `,
-    `-------------------------------------------------------------`,
+    `
+    |*№* ${index + 1} 
+    |
+    |👤 *Имя:* ${nickName} 
+    |
+    |🤔 *Операц.за месяц/рейтинг:* ${monthOrderCount}/${monthFinishRate}
+    |
+    |💰 *Осталось ${asset}:* ${surplusAmount}
+    |
+    |📊 Торгует от ${minSingleTransAmount} ${fiatSymbol} до ${dynamicMaxSingleTransAmount} ${fiatSymbol}
+    |
+    |🧐 *Продает* 1 ${asset} за ${price} ${fiatSymbol}
+    |
+    |🏛 *Банк:* ${bank}
+    --------------------------------------`,
   ].join("\n");
 }

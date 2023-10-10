@@ -25,12 +25,12 @@ class MenuCommand {
   }
 
   async handleBuy(ctx) {
-    await ctx.scene.enter("rate_usdt");
+    await ctx.scene.enter("buy_usdt");
     ctx.scene.session.fetchData.method = "buy";
   }
 
   async handleSell(ctx) {
-    await ctx.scene.enter("rate_usdt");
+    await ctx.scene.enter("buy_usdt");
     ctx.scene.session.fetchData.method = "sell";
   }
 
