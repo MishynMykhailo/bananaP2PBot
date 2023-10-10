@@ -2,14 +2,14 @@ const { Telegraf, Scenes } = require("telegraf");
 const LocalSession = require("telegraf-session-local");
 const StartCommand = require("./commands/start.command");
 const MenuCommand = require("./commands/menu.command");
-const rateUsdtScene = require("./scenes/rate_usdt.scene");
+const BuyUsdtScene = require("./scenes/buy_usdt.scene");
 require("dotenv").config();
 const { TOKEN } = process.env;
 class Bot {
   constructor(token) {
     this.bot = new Telegraf(token);
     this.commands = [new StartCommand(this.bot), new MenuCommand(this.bot)];
-    this.scenes = [rateUsdtScene];
+    this.scenes = [BuyUsdtScene];
 
     this.initMiddleware();
     this.initCommands();
