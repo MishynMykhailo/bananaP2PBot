@@ -103,15 +103,10 @@ class BuyUsdtScene extends BaseScene {
       return markupListOrders(e, index);
     });
 
-    const finalMessage = [
-      `*Запрос сделан:* ${getCurrentFormattedDate()} `,
-      `------------------------------------------------`,
-      ...resultMessage,
-    ];
-    if (!finalMessage) {
+    if (!resultMessage) {
       return await ctx.reply("Попробуйте позже");
     }
-    await ctx.reply(finalMessage.join("\n"), {
+    await ctx.reply(resultMessage.join("\n"), {
       parse_mode: "Markdown",
     });
 

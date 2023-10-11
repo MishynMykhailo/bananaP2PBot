@@ -14,7 +14,7 @@ async function getP2Ppage(data) {
 
     const jsonData = {
       page: 1,
-      rows: 5,
+      rows: 3,
       asset: "USDT", // Используйте переданный параметр asset или "USDT" по умолчанию
       fiat: "UAH", // Используйте переданный параметр fiat или "UAH" по умолчанию
       tradeType: method, // Используйте переданный параметр tradeType или "Sell" по умолчанию

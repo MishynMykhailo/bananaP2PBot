@@ -42,8 +42,7 @@ function markupListOrders(data, index) {
   //     `--------------------------------------`,
   //   ]
   return [
-    `
-    |*№* ${index + 1} 
+    `|*№* ${index + 1} 
     |
     |👤 *Имя:* ${nickName} 
     |
@@ -57,5 +56,5 @@ function markupListOrders(data, index) {
     |
     |🏛 *Банк:* ${bank}
     --------------------------------------`,
-  ].join("\n");
+  ];
 }
