@@ -4,16 +4,7 @@
       "id": "827663400:827663400",
       "data": {
         "courseLike": true,
-        "__scenes": {
-          "fetchData": {
-            "method": "buy",
-            "bank": "privatBank"
-          },
-          "current": "rate_usdt",
-          "state": {},
-          "expires": 1696925247,
-          "awaitingSumInput": true
-        }
+        "__scenes": {}
       }
     }
   ]
