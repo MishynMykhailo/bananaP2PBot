@@ -44,15 +44,15 @@ function markupListOrders(data, index) {
   return [
     `|*№* ${index + 1} 
     |
-    |👤 *Имя:* ${nickName} 
+    |👤 *Имя:* ${nickName.toString()}
     |
     |🤔 *Операц.за месяц/рейтинг:* ${monthOrderCount}/${monthFinishRate}
     |
-    |💰 *Осталось ${asset}:* ${surplusAmount}
+    |💰 *Осталось ${asset|| 'value'}:* ${surplusAmount}
     |
     |📊 Торгует от ${minSingleTransAmount} ${fiatSymbol} до ${dynamicMaxSingleTransAmount} ${fiatSymbol}
     |
-    |🧐 *Продает* 1 ${asset} за ${price} ${fiatSymbol}
+    |🧐 *Продает* 1 ${asset|| 'value'} за ${price} ${fiatSymbol}
     |
     |🏛 *Банк:* ${bank}
     --------------------------------------`,

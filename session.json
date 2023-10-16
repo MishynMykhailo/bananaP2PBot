@@ -4,7 +4,9 @@
       "id": "827663400:827663400",
       "data": {
         "courseLike": true,
-        "__scenes": {}
+        "__scenes": {
+          "fetchData": {}
+        }
       }
     }
   ]
