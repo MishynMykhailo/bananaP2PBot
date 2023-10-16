@@ -25,11 +25,17 @@ class MenuCommand {
   }
 
   async handleBuy(ctx) {
+    if (!ctx.scene.session.fetchData) {
+      ctx.scene.session.fetchData = {};
+    }
     await ctx.scene.enter("buy_usdt");
     ctx.scene.session.fetchData.method = "buy";
   }
 
   async handleSell(ctx) {
+    if (!ctx.scene.session.fetchData) {
+      ctx.scene.session.fetchData = {};
+    }
     await ctx.scene.enter("buy_usdt");
     ctx.scene.session.fetchData.method = "sell";
   }

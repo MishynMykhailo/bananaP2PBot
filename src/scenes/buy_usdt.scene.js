@@ -76,7 +76,10 @@ class BuyUsdtScene extends BaseScene {
     if (isNaN(userArmount)) {
       return await ctx.reply(`Введите число, без сторонних символов`);
     }
-
+    if (userArmount < 400) {
+      return await ctx.reply("Сумма должна быть не меньше 400 грн");
+    }
+    console.log("1", userArmount);
     await ctx.reply(`Вы ввели сумму: ${userArmount}`);
     awaitingSumInput = false;
 
